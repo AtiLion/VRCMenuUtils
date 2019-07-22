@@ -1,0 +1,11 @@
+Assembly-CSharp.dll
+Assembly-CSharp-firstpass.dll
+UnityEngine.CoreModule.dll
+UnityEngine.dll
+UnityEngine.TextRenderingModule.dll
+UnityEngine.UI.dll
+UnityEngine.UIModule.dll
+VRCCore-Standalone.dll
+VRCSDK2.dll
+VRCModLoader.dll
+VRCTools.dll
