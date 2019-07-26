@@ -12,7 +12,7 @@ namespace VRChat.UI
 {
     public class VRCEUiVolumeControl
     {
-        #region VRChatExtended Properties
+        #region VRCUI Properties
         public bool Success { get; private set; }
         #endregion
 

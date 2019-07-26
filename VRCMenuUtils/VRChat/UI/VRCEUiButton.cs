@@ -12,7 +12,7 @@ namespace VRChat.UI
 {
     public class VRCEUiButton
     {
-        #region VRChatExtended Properties
+        #region VRCUI Properties
         public bool Success { get; private set; }
         #endregion
 
@@ -75,7 +75,7 @@ namespace VRChat.UI
             RectTransform tmpRT = orgControl.GetComponent<RectTransform>();
 
             Position.localScale = tmpRT.localScale;
-            Position.anchoredPosition = tmpRT.anchoredPosition;
+            //Position.anchoredPosition = tmpRT.anchoredPosition;
             Position.sizeDelta = tmpRT.sizeDelta;
             Position.localPosition = new Vector3(position.x, position.y, 0f);
             Position.localRotation = tmpRT.localRotation;
