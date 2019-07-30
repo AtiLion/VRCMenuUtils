@@ -32,7 +32,7 @@ namespace VRChat.UI
         public Image Image { get; private set; }
         #endregion
 
-        public VRCEUiScrollView(string name, Vector2 position, Vector2 size, float spacing, Transform parent = null)
+        public VRCEUiScrollView(string name, Vector2 position, Vector2 size, float spacing, RectOffset padding = null, Transform parent = null)
         {
             // Create game objects
             GameObject goControl = new GameObject(name);
@@ -79,7 +79,10 @@ namespace VRChat.UI
             ContentControl.localScale = Vector3.one;
             ContentControl.localRotation = Quaternion.identity;
             ContentControl.localPosition = Vector3.zero;
-            ContentPosition.localPosition = new Vector3(0f, 10f, 0f);
+            ContentPosition.localPosition = new Vector3(0f, 0f, 0f);
+            ContentPosition.anchorMin = new Vector2(0.5f, 1f);
+            ContentPosition.anchorMax = new Vector2(0.5f, 1f);
+            ContentPosition.pivot = new Vector2(0.5f, 1f);
             ContentPosition.sizeDelta = new Vector2(size.x, spacing);
             SizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
             LayoutGroup.spacing = spacing;
@@ -88,6 +91,8 @@ namespace VRChat.UI
             LayoutGroup.childForceExpandWidth = false;
             LayoutGroup.childControlHeight = true;
             LayoutGroup.childControlWidth = true;
+            if (padding != null)
+                LayoutGroup.padding = padding;
 
             ScrollRect.content = ContentPosition;
             ScrollRect.viewport = Position;
