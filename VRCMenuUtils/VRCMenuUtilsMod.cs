@@ -51,17 +51,35 @@ namespace VRCMenuUtils
                 foreach (Component component in target.GetChild(i).GetComponents<Component>())
                     MVRCLogger.Log(" - " + component);
             }*/
-            for(int i = 0; i < 6; i++)
+
+            //VRCEUiButton button = new VRCEUiButton("TestBtn" + i, new Vector2(0f, 75f - (75f * i)), "Test Button " + i, UserInfoScroll.ContentControl);
+            VRCEUiButton topSpacer = new VRCEUiButton("TopSpacer", new Vector2(0f, 0f), " ", UserInfoScroll.ContentControl);
+            LayoutElement element = topSpacer.Control.gameObject.AddComponent<LayoutElement>();
+            element.preferredWidth = 170f;
+            element.preferredHeight = 2.5f;
+
+            topSpacer.Button.gameObject.SetActive(false);
+            //UserInfoScroll.ContentPosition.sizeDelta += new Vector2(0f, 75f);
+
+            for (int i = 0; i < 24; i++)
             {
                 //VRCEUiButton button = new VRCEUiButton("TestBtn" + i, new Vector2(0f, 75f - (75f * i)), "Test Button " + i, UserInfoScroll.ContentControl);
                 VRCEUiButton button = new VRCEUiButton("TestBtn" + i, new Vector2(0f, 0f), "Test Button " + i, UserInfoScroll.ContentControl);
-                LayoutElement element = button.Control.gameObject.AddComponent<LayoutElement>();
+                element = button.Control.gameObject.AddComponent<LayoutElement>();
 
                 element.preferredWidth = 170f;
                 element.preferredHeight = 40f;
                 //UserInfoScroll.ContentPosition.sizeDelta += new Vector2(0f, 75f);
             }
-            UserInfoScroll.ScrollRect.verticalNormalizedPosition = 0f;
+
+            VRCEUiButton bottomSpacer = new VRCEUiButton("BottomSpacer", new Vector2(0f, 0f), " ", UserInfoScroll.ContentControl);
+            element = bottomSpacer.Control.gameObject.AddComponent<LayoutElement>();
+            element.preferredWidth = 170f;
+            element.preferredHeight = 2.5f;
+
+            bottomSpacer.Button.gameObject.SetActive(false);
+            Vector2 size = UserInfoScroll.ContentPosition.sizeDelta;
+            UserInfoScroll.ContentPosition.localPosition -= new Vector3(0f, (size.y + 2.75f) * 20f, 0f);
             MVRCLogger.Log("Added buttons!");
         }
         #endregion
