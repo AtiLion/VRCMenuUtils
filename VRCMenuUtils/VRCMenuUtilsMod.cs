@@ -35,7 +35,7 @@ namespace VRCMenuUtils
 
         private IEnumerator ExecuteUI()
         {
-            yield return VRCMenuUtils.WaitForUtilsLoad();
+            yield return VRCMenuUtils.WaitForInit();
 
             for(int i = 0; i < 10; i++)
             {

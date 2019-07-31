@@ -28,7 +28,7 @@ namespace VRCMenuUtils
         #endregion
 
         #region UserInfo Variables
-        private static VRCEUiScrollView _userInfoScrollView;
+        public static VRCEUiScrollView _userInfoScrollView;
         private static VRCEUiButton _userInfoMoreButton;
         #endregion
 
@@ -66,7 +66,7 @@ namespace VRCMenuUtils
         #endregion
 
         #region Coroutine Functions
-        public static IEnumerator WaitForUtilsLoad()
+        public static IEnumerator WaitForInit()
         {
             // Grab VRCUiManager
             if (_miVRCUiManagerGetInstace != null && _UIInitialized)
@@ -82,6 +82,10 @@ namespace VRCMenuUtils
             while (_miVRCUiManagerGetInstace.Invoke(null, null) == null)
                 yield return null;
             MVRCLogger.Log("VRCUiManager has been loaded!");
+
+            // Run UI checks
+            while (VRCEUi.UserInfoScreen == null)
+                yield return null;
 
             // Get UserInfo defaults
             Transform[] userInfoButtons = new Transform[]
@@ -142,7 +146,7 @@ namespace VRCMenuUtils
         private static void _UserInfoButtonAdded(Transform button)
         {
             // Setup button internals
-            button.SetParent(_userInfoScrollView.ContentControl);
+            button.SetParent(_userInfoScrollView.ContentControl, false);
 
             // Setup button UI
             LayoutElement element = button.gameObject.AddComponent<LayoutElement>();
