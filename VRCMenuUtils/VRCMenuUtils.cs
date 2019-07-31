@@ -21,6 +21,8 @@ namespace VRCMenuUtils
 
         #region VRCMenuUtils Variables
         private static bool _UIInitialized = false;
+        private static GameObject _targetHook = null;
+        private static UtilExecutor _targetExecutor = null;
         #endregion
 
         #region VRCMenuUtils Delegates
@@ -28,7 +30,7 @@ namespace VRCMenuUtils
         #endregion
 
         #region UserInfo Variables
-        public static VRCEUiScrollView _userInfoScrollView;
+        public static VRCEUiVerticalScrollView _userInfoScrollView;
         private static VRCEUiButton _userInfoMoreButton;
         #endregion
 
@@ -40,6 +42,16 @@ namespace VRCMenuUtils
         public static event ElementChangeDelegate OnUserInfoButtonAdd;
         public static event ElementChangeDelegate OnUserInfoButtonRemove;
         #endregion
+
+        static VRCMenuUtils()
+        {
+            // We can assume UnityEngine is loaded by this point
+            _targetHook = new GameObject();
+            _targetExecutor = _targetHook.AddComponent<UtilExecutor>();
+            GameObject.DontDestroyOnLoad(_targetHook);
+
+            _targetExecutor.StartCoroutine(SetupUI());
+        }
 
         #region UserInfo Functions
         public static void AddUserInfoButton(VRCEUiButton button) =>
@@ -65,8 +77,17 @@ namespace VRCMenuUtils
         }
         #endregion
 
-        #region Coroutine Functions
+        #region MenuUtils Coroutine Functions
         public static IEnumerator WaitForInit()
+        {
+            // Dual loading sucks I swear
+            while (!_UIInitialized)
+                yield return null;
+        }
+        #endregion
+
+        #region Control Coroutine Functions
+        private static IEnumerator SetupUI()
         {
             // Grab VRCUiManager
             if (_miVRCUiManagerGetInstace != null && _UIInitialized)
@@ -103,7 +124,7 @@ namespace VRCMenuUtils
 
             // Load UserInfo UI
             MVRCLogger.Log("Loading UserInfo UI...");
-            _userInfoScrollView = new VRCEUiScrollView("MoreScroll", new Vector2(userInfoButtonPos.x, userInfoButtonPos.y - 75f), new Vector2(200f, 75f * 3f), 35f, new RectOffset(0, 0, 17, 17), VRCEUi.InternalUserInfoScreen.UserPanel);
+            _userInfoScrollView = new VRCEUiVerticalScrollView("MoreScroll", new Vector2(userInfoButtonPos.x, userInfoButtonPos.y - 75f), new Vector2(200f, 75f * 3f), 35f, new RectOffset(0, 0, 17, 17), VRCEUi.InternalUserInfoScreen.UserPanel);
             _userInfoScrollView.Control.gameObject.SetActive(false);
 
             _userInfoMoreButton = new VRCEUiButton("More", new Vector2(userInfoButtonPos.x, userInfoButtonPos.y + 75f), "More", VRCEUi.InternalUserInfoScreen.UserPanel);
@@ -149,9 +170,10 @@ namespace VRCMenuUtils
             button.SetParent(_userInfoScrollView.ContentControl, false);
 
             // Setup button UI
+            Vector2 scale = button.GetComponent<RectTransform>().sizeDelta;
             LayoutElement element = button.gameObject.AddComponent<LayoutElement>();
-            element.preferredWidth = 170f;
-            element.preferredHeight = 40f;
+            element.preferredWidth = scale.x;
+            element.preferredHeight = scale.y;
         }
         #endregion
     }

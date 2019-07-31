@@ -10,7 +10,7 @@ using VRCMenuUtils;
 
 namespace VRChat.UI
 {
-    public class VRCEUiScrollView
+    public class VRCEUiVerticalScrollView
     {
         #region VRCUI Properties
         public bool Success { get; private set; }
@@ -32,7 +32,7 @@ namespace VRChat.UI
         public Image Image { get; private set; }
         #endregion
 
-        public VRCEUiScrollView(string name, Vector2 position, Vector2 size, float spacing, RectOffset padding = null, Transform parent = null)
+        public VRCEUiVerticalScrollView(string name, Vector2 position, Vector2 size, float spacing, RectOffset padding = null, Transform parent = null)
         {
             // Create game objects
             GameObject goControl = new GameObject(name);
