@@ -24,19 +24,23 @@ namespace VRCMenuUtils
         private static GameObject _targetHook = null;
         private static UtilExecutor _targetExecutor = null;
         #endregion
-
         #region VRCMenuUtils Properties
         public static bool IsIntialized => _UIInitialized;
         #endregion
 
         #region UserInfo Variables
-        public static VRCEUiVerticalScrollView _userInfoScrollView;
+        private static VRCEUiVerticalScrollView _userInfoScrollView;
         private static VRCEUiButton _userInfoMoreButton;
         private static Transform[] _userInfoDefaultButtons;
         #endregion
-
         #region UserInfo Properties
         internal static List<Transform> UserInfoButtons = new List<Transform>();
+        #endregion
+
+        #region QuickMenu Variables
+        private static VRCEUiQuickButton _quickMenuMoreButton;
+        private static VRCEUiQuickMenu _quickMenuMoreMenu;
+        private static VRCEUiQuickButton _quickMenuLessButton;
         #endregion
 
         #region VRCMenuUtils Delegates
@@ -127,6 +131,18 @@ namespace VRCMenuUtils
                 yield return null;
             MVRCLogger.Log("VRCUiManager has been loaded!");
 
+            // Setup UserInfo
+            yield return SetupUserInfo();
+
+            // Setup Quick Menu
+            yield return SetupQuickMenu();
+
+            // Finish
+            OnUserInfoButtonAdd += _UserInfoButtonAdded;
+            _UIInitialized = true;
+        }
+        private static IEnumerator SetupUserInfo()
+        {
             // Run UI checks
             while (VRCEUi.UserInfoScreen == null)
                 yield return null;
@@ -158,10 +174,38 @@ namespace VRCMenuUtils
                 SetUserInfoUIState(_userInfoMoreButton.Text.text == "More"));
             VRCEUi.UserInfoScreen.AddComponent<UserInfoActivityManager>();
             MVRCLogger.Log("UserInfo UI has been loaded!");
+        }
+        private static IEnumerator SetupQuickMenu()
+        {
+            // Run UI checks
+            while (VRCEUi.QuickMenu == null)
+                yield return null;
 
-            // Finish
-            OnUserInfoButtonAdd += _UserInfoButtonAdded;
-            _UIInitialized = true;
+            // Get QuickMenu defaults
+            Vector2 quickMenuButtonPos = VRCEUi.InternalQuickMenu.ReportWorldButton.GetComponent<RectTransform>().localPosition;
+
+            // Load QuickMenu UI
+            _quickMenuMoreButton = new VRCEUiQuickButton("MoreButton", new Vector2(quickMenuButtonPos.x, quickMenuButtonPos.y + 840f), "More", "Shows more Quick Menu buttons that mods have added.", VRCEUi.InternalQuickMenu.ShortcutMenu);
+            _quickMenuMoreButton.Button.onClick.AddListener(() =>
+            {
+                if (VRCEUi.InternalQuickMenu.CurrentPage == null)
+                    return;
+
+                VRCEUi.InternalQuickMenu.CurrentPage.SetActive(false);
+                VRCEUi.InternalQuickMenu.InfoBar.gameObject.SetActive(false);
+                VRCEUi.InternalQuickMenu.CurrentPage = _quickMenuMoreMenu.Control.gameObject;
+                _quickMenuMoreMenu.Control.gameObject.SetActive(true);
+            });
+
+            _quickMenuMoreMenu = new VRCEUiQuickMenu("MoreMenu", false);
+            _quickMenuLessButton = new VRCEUiQuickButton("LessButton", new Vector2(quickMenuButtonPos.x, quickMenuButtonPos.y + 420f), "Less", "Takes you back to the main Quick Menu screen.", _quickMenuMoreMenu.Control);
+            _quickMenuLessButton.Button.onClick.AddListener(() =>
+            {
+                if (VRCEUi.QuickMenu == null)
+                    return;
+
+                VRCEUi.QuickMenu.SetMenuIndex(0);
+            });
         }
         #endregion
 

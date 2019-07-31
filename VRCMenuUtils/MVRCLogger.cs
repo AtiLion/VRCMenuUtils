@@ -16,7 +16,7 @@ namespace VRCMenuUtils
             if (Console.CursorLeft > 1)
                 Console.WriteLine();
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("[VRCExtended] " + text);
+            Console.WriteLine("[MenuUtils] " + text);
             Console.ForegroundColor = oldColor;
         }
         public static void Log(object obj)
@@ -28,7 +28,7 @@ namespace VRCMenuUtils
             if (Console.CursorLeft > 1)
                 Console.WriteLine();
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("[VRCExtended] " + obj.ToString());
+            Console.WriteLine("[MenuUtils] " + obj.ToString());
             Console.ForegroundColor = oldColor;
         }
 
@@ -41,7 +41,7 @@ namespace VRCMenuUtils
             if (Console.CursorLeft > 1)
                 Console.WriteLine();
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("[VRCExtended] " + text);
+            Console.WriteLine("[MenuUtils] " + text);
             Console.ForegroundColor = oldColor;
         }
         public static void LogWarning(object obj)
@@ -53,7 +53,7 @@ namespace VRCMenuUtils
             if (Console.CursorLeft > 1)
                 Console.WriteLine();
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("[VRCExtended] " + obj.ToString());
+            Console.WriteLine("[MenuUtils] " + obj.ToString());
             Console.ForegroundColor = oldColor;
         }
 
@@ -66,7 +66,7 @@ namespace VRCMenuUtils
             if (Console.CursorLeft > 1)
                 Console.WriteLine();
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("[VRCExtended] " + text);
+            Console.WriteLine("[MenuUtils] " + text);
             if (exception != null)
                 Console.WriteLine(exception.ToString());
             Console.ForegroundColor = oldColor;
@@ -80,7 +80,7 @@ namespace VRCMenuUtils
             if (Console.CursorLeft > 1)
                 Console.WriteLine();
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("[VRCExtended] " + obj.ToString());
+            Console.WriteLine("[MenuUtils] " + obj.ToString());
             if (exception != null)
                 Console.WriteLine(exception.ToString());
             Console.ForegroundColor = oldColor;

@@ -34,7 +34,7 @@ namespace VRChat.UI
             get
             {
                 if (_quickMenu == null)
-                    _quickMenu = (QuickMenu)typeof(QuickMenu).GetMethod("get_Instance", BindingFlags.Public | BindingFlags.Static).Invoke(null, null);
+                    _quickMenu = ((QuickMenu)typeof(QuickMenu).GetMethod("get_Instance", BindingFlags.Public | BindingFlags.Static).Invoke(null, null));
                 return _quickMenu;
             }
         }
@@ -156,15 +156,179 @@ namespace VRChat.UI
         #endregion
 
         #region VRChat Menu Screen Classes
+        public static class InternalQuickMenu
+        {
+            #region QuickMenu Variables
+            private static Transform _shortcutMenu;
+            private static Transform _cameraMenu;
+            private static Transform _newElements;
+
+            private static FieldInfo _fiCurrentPage;
+            #endregion
+            #region QuickMenu Properties
+            public static Transform ShortcutMenu
+            {
+                get
+                {
+                    if(_shortcutMenu == null)
+                    {
+                        if (QuickMenu == null)
+                            return null;
+                        _shortcutMenu = QuickMenu.transform.Find("ShortcutMenu");
+                    }
+                    return _shortcutMenu;
+                }
+            }
+            public static Transform CameraMenu
+            {
+                get
+                {
+                    if (_cameraMenu == null)
+                    {
+                        if (QuickMenu == null)
+                            return null;
+                        _cameraMenu = QuickMenu.transform.Find("CameraMenu");
+                    }
+                    return _cameraMenu;
+                }
+            }
+            public static Transform NewElements
+            {
+                get
+                {
+                    if (_newElements == null)
+                    {
+                        if (QuickMenu == null)
+                            return null;
+                        _newElements = QuickMenu.transform.Find("QuickMenu_NewElements");
+                    }
+                    return _newElements;
+                }
+            }
+
+            public static GameObject CurrentPage
+            {
+                get
+                {
+                    if(_fiCurrentPage == null)
+                    {
+                        _fiCurrentPage = typeof(QuickMenu).GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
+                                            .Where(a => a.FieldType == typeof(GameObject))
+                                            .LastOrDefault(a => (GameObject)a.GetValue(QuickMenu) == ShortcutMenu.gameObject);
+                        if (_fiCurrentPage == null)
+                            return null;
+                        MVRCLogger.Log("Found QuickMenu currentPage on: " + _fiCurrentPage.Name);
+                    }
+
+                    return _fiCurrentPage.GetValue(QuickMenu) as GameObject;
+                }
+                set
+                {
+                    if (_fiCurrentPage == null)
+                    {
+                        _fiCurrentPage = typeof(QuickMenu).GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
+                                            .Where(a => a.FieldType == typeof(GameObject))
+                                            .LastOrDefault(a => (GameObject)a.GetValue(QuickMenu) == ShortcutMenu.gameObject);
+                        if (_fiCurrentPage == null)
+                            return;
+                        MVRCLogger.Log("Found QuickMenu currentPage on: " + _fiCurrentPage.Name);
+                    }
+
+                    _fiCurrentPage.SetValue(QuickMenu, value);
+                }
+            }
+            #endregion
+
+            #region ShortcutMenu Variables
+            private static Transform _reportWorldButton;
+            #endregion
+            #region ShortcutMenu Properties
+            public static Transform ReportWorldButton
+            {
+                get
+                {
+                    if(_reportWorldButton == null)
+                    {
+                        if (ShortcutMenu == null)
+                            return null;
+                        _reportWorldButton = ShortcutMenu.Find("ReportWorldButton");
+                    }
+                    return _reportWorldButton;
+                }
+            }
+            #endregion
+
+            #region NewElements Variables
+            private static Transform _infoBar;
+            #endregion
+            #region NewElements Properties
+            public static Transform InfoBar
+            {
+                get
+                {
+                    if (_infoBar == null)
+                    {
+                        if (NewElements == null)
+                            return null;
+                        _infoBar = NewElements.Find("_InfoBar");
+                    }
+                    return _infoBar;
+                }
+            }
+            #endregion
+        }
         public static class InternalUserInfoScreen
         {
             #region UserInfo Variables
             private static PageUserInfo _instance;
             #endregion
+            #region UserInfo Properties
+            public static PageUserInfo Instance
+            {
+                get
+                {
+                    if (_instance == null)
+                    {
+                        if (UserInfoScreen == null)
+                            return null;
+                        _instance = UserInfoScreen.GetComponent<VRCUiPage>() as PageUserInfo;
+                    }
+                    return _instance;
+                }
+            }
+            #endregion
 
             #region UserInfo UI Variables
             private static Transform _userPanel;
             private static Transform _avatarImage;
+            #endregion
+            #region UserInfo UI Properties
+            public static Transform UserPanel
+            {
+                get
+                {
+                    if (_userPanel == null)
+                    {
+                        if (UserInfoScreen == null)
+                            return null;
+                        _userPanel = UserInfoScreen.transform.Find("User Panel");
+                    }
+                    return _userPanel;
+                }
+            }
+            public static Transform AvatarImage
+            {
+                get
+                {
+                    if (_avatarImage == null)
+                    {
+                        if (UserInfoScreen == null)
+                            return null;
+                        _avatarImage = UserInfoScreen.transform.Find("AvatarImage");
+                    }
+                    return _avatarImage;
+                }
+            }
             #endregion
 
             #region UserPanel Variables
@@ -178,83 +342,12 @@ namespace VRChat.UI
             private static Transform _reportButton;
             private static Transform _usernameText;
             #endregion
-
-            #region User Variables
-            private static Transform _userActions;
-            #endregion
-
-            #region User Actions Variables
-            private static Transform _voteKickButton;
-            #endregion
-
-            #region Moderator Variables
-            private static Transform _moderatorActions;
-            #endregion
-
-            #region Moderator Actions Variables
-            private static Transform _joinButton;
-            #endregion
-
-            #region OnlineFriend Variables
-            private static Transform _onlineJoinButton;
-            private static Transform _onlineVoteKickButton;
-            #endregion
-
-            #region OfflineFriend Variables
-            private static Transform _offlineJoinButton;
-            #endregion
-
-            #region UserInfo Properties
-            public static PageUserInfo Instance
-            {
-                get
-                {
-                    if(_instance == null)
-                    {
-                        if (UserInfoScreen == null)
-                            return null;
-                        _instance = UserInfoScreen.GetComponent<VRCUiPage>() as PageUserInfo;
-                    }
-                    return _instance;
-                }
-            }
-            #endregion
-
-            #region UserInfo UI Properties
-            public static Transform UserPanel
-            {
-                get
-                {
-                    if(_userPanel == null)
-                    {
-                        if (UserInfoScreen == null)
-                            return null;
-                        _userPanel = UserInfoScreen.transform.Find("User Panel");
-                    }
-                    return _userPanel;
-                }
-            }
-            public static Transform AvatarImage
-            {
-                get
-                {
-                    if(_avatarImage == null)
-                    {
-                        if (UserInfoScreen == null)
-                            return null;
-                        _avatarImage = UserInfoScreen.transform.Find("AvatarImage");
-                    }
-                    return _avatarImage;
-                }
-            }
-            #endregion
-
             #region UserPanel Properties
             public static Transform Moderator
             {
                 get
                 {
-                    if(_moderator == null)
+                    if (_moderator == null)
                     {
                         if (UserPanel == null)
                             return null;
@@ -267,7 +360,7 @@ namespace VRChat.UI
             {
                 get
                 {
-                    if(_user == null)
+                    if (_user == null)
                     {
                         if (UserPanel == null)
                             return null;
@@ -280,7 +373,7 @@ namespace VRChat.UI
             {
                 get
                 {
-                    if(_onlineFriend == null)
+                    if (_onlineFriend == null)
                     {
                         if (UserPanel == null)
                             return null;
@@ -307,7 +400,7 @@ namespace VRChat.UI
             {
                 get
                 {
-                    if(_playlistsButton == null)
+                    if (_playlistsButton == null)
                     {
                         if (UserPanel == null)
                             return null;
@@ -333,7 +426,7 @@ namespace VRChat.UI
             {
                 get
                 {
-                    if(_reportButton == null)
+                    if (_reportButton == null)
                     {
                         if (UserPanel == null)
                             return null;
@@ -346,7 +439,7 @@ namespace VRChat.UI
             {
                 get
                 {
-                    if(_usernameText == null)
+                    if (_usernameText == null)
                     {
                         if (UserPanel == null)
                             return null;
@@ -357,12 +450,15 @@ namespace VRChat.UI
             }
             #endregion
 
+            #region User Variables
+            private static Transform _userActions;
+            #endregion
             #region User Properties
             public static Transform UserActions
             {
                 get
                 {
-                    if(_userActions == null)
+                    if (_userActions == null)
                     {
                         if (User == null)
                             return null;
@@ -373,12 +469,15 @@ namespace VRChat.UI
             }
             #endregion
 
+            #region User Actions Variables
+            private static Transform _voteKickButton;
+            #endregion
             #region User Actions Properties
             public static Transform VoteKickButton
             {
                 get
                 {
-                    if(_voteKickButton == null)
+                    if (_voteKickButton == null)
                     {
                         if (UserActions == null)
                             return null;
@@ -389,12 +488,15 @@ namespace VRChat.UI
             }
             #endregion
 
+            #region Moderator Variables
+            private static Transform _moderatorActions;
+            #endregion
             #region Moderator Properties
             public static Transform ModeratorActions
             {
                 get
                 {
-                    if(_moderatorActions == null)
+                    if (_moderatorActions == null)
                     {
                         if (Moderator == null)
                             return null;
@@ -405,12 +507,15 @@ namespace VRChat.UI
             }
             #endregion
 
+            #region Moderator Actions Variables
+            private static Transform _joinButton;
+            #endregion
             #region Moderator Actions Properties
             public static Transform JoinButton
             {
                 get
                 {
-                    if(_joinButton == null)
+                    if (_joinButton == null)
                     {
                         if (ModeratorActions == null)
                             return null;
@@ -421,12 +526,16 @@ namespace VRChat.UI
             }
             #endregion
 
+            #region OnlineFriend Variables
+            private static Transform _onlineJoinButton;
+            private static Transform _onlineVoteKickButton;
+            #endregion
             #region OnlineFriend Properties
             public static Transform OnlineJoinButton
             {
                 get
                 {
-                    if(_onlineJoinButton == null)
+                    if (_onlineJoinButton == null)
                     {
                         if (OnlineFriend == null)
                             return null;
@@ -450,6 +559,9 @@ namespace VRChat.UI
             }
             #endregion
 
+            #region OfflineFriend Variables
+            private static Transform _offlineJoinButton;
+            #endregion
             #region OfflineFriend Properties
             public static Transform OfflineJoinButton
             {
@@ -472,11 +584,6 @@ namespace VRChat.UI
             #region Settings UI Variables
             private static Transform _volumePanel;
             #endregion
-
-            #region VolumePanel Variables
-            private static Transform _volumeMaster;
-            #endregion
-
             #region Settings UI Properties
             public static Transform VolumePanel
             {
@@ -493,6 +600,9 @@ namespace VRChat.UI
             }
             #endregion
 
+            #region VolumePanel Variables
+            private static Transform _volumeMaster;
+            #endregion
             #region VolumePanel Properties
             public static Transform VolumeMaster
             {

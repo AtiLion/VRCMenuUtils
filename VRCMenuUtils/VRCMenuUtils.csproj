@@ -79,6 +79,8 @@
     <Compile Include="VRChat\UI\VRCEUi.cs" />
     <Compile Include="VRChat\UI\VRCEUiButton.cs" />
     <Compile Include="VRChat\UI\VRCEUiGridScrollView.cs" />
+    <Compile Include="VRChat\UI\VRCEUiQuickButton.cs" />
+    <Compile Include="VRChat\UI\VRCEUiQuickMenu.cs" />
     <Compile Include="VRChat\UI\VRCEUiVerticalScrollView.cs" />
     <Compile Include="VRChat\UI\VRCEUiText.cs" />
     <Compile Include="VRChat\UI\VRCEUiVolumeControl.cs" />

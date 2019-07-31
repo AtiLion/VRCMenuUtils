@@ -32,14 +32,14 @@ namespace VRCMenuUtils
             yield return VRCMenuUtils.WaitForInit();
 
             // Grab all the buttons
-            /*foreach (Button button in VRCEUi.UserInfoScreen.GetComponentsInChildren<Button>(true))
+            /*foreach (Button button in VRCEUi.QuickMenu.gameObject.GetComponentsInChildren<Button>(true))
             {
                 if (button.transform.parent == null)
                     continue;
                 string buttonPosition = button.transform.name;
                 Transform position = button.transform.parent;
 
-                while(position.name != VRCEUi.UserInfoScreen.name)
+                while(position.name != VRCEUi.QuickMenu.transform.name)
                 {
                     buttonPosition += " -> " + position.name;
                     if (position.parent != null)
@@ -47,9 +47,20 @@ namespace VRCMenuUtils
                 }
                 MVRCLogger.Log(buttonPosition);
             }*/
+            // Grab all transforms
+            /*Transform target = VRCEUi.QuickMenu.transform.Find("EmojiMenu");
+            MVRCLogger.Log("Transform: " + target.name);
+            foreach (Component component in target.GetComponents<Component>())
+                MVRCLogger.Log(" - " + component);
+            for (int i = 0; i < target.childCount; i++)
+            {
+                MVRCLogger.Log("Transform: " + target.GetChild(i).name);
+                foreach (Component component in target.GetChild(i).GetComponents<Component>())
+                    MVRCLogger.Log(" - " + component);
+            }*/
 
             // User Info
-            for(int i = 0; i < 10; i++)
+            for (int i = 0; i < 10; i++)
             {
                 VRCEUiButton button = new VRCEUiButton("Test " + i, new Vector2(0f, 0f), "Test " + i);
 
