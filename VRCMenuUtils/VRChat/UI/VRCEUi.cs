@@ -170,6 +170,8 @@ namespace VRChat.UI
             #region UserPanel Variables
             private static Transform _moderator;
             private static Transform _user;
+            private static Transform _onlineFriend;
+            private static Transform _offlineFriend;
 
             private static Transform _playlistsButton;
             private static Transform _favoriteButton;
@@ -191,6 +193,15 @@ namespace VRChat.UI
 
             #region Moderator Actions Variables
             private static Transform _joinButton;
+            #endregion
+
+            #region OnlineFriend Variables
+            private static Transform _onlineJoinButton;
+            private static Transform _onlineVoteKickButton;
+            #endregion
+
+            #region OfflineFriend Variables
+            private static Transform _offlineJoinButton;
             #endregion
 
             #region UserInfo Properties
@@ -263,6 +274,32 @@ namespace VRChat.UI
                         _user = UserPanel.Find("User");
                     }
                     return _user;
+                }
+            }
+            public static Transform OnlineFriend
+            {
+                get
+                {
+                    if(_onlineFriend == null)
+                    {
+                        if (UserPanel == null)
+                            return null;
+                        _onlineFriend = UserPanel.Find("OnlineFriend");
+                    }
+                    return _onlineFriend;
+                }
+            }
+            public static Transform OfflineFriend
+            {
+                get
+                {
+                    if (_offlineFriend == null)
+                    {
+                        if (UserPanel == null)
+                            return null;
+                        _offlineFriend = UserPanel.Find("OfflineFriend");
+                    }
+                    return _offlineFriend;
                 }
             }
 
@@ -380,6 +417,52 @@ namespace VRChat.UI
                         _joinButton = ModeratorActions.Find("Join!");
                     }
                     return _joinButton;
+                }
+            }
+            #endregion
+
+            #region OnlineFriend Properties
+            public static Transform OnlineJoinButton
+            {
+                get
+                {
+                    if(_onlineJoinButton == null)
+                    {
+                        if (OnlineFriend == null)
+                            return null;
+                        _onlineJoinButton = OnlineFriend.Find("JoinButton");
+                    }
+                    return _onlineJoinButton;
+                }
+            }
+            public static Transform OnlineVoteKickButton
+            {
+                get
+                {
+                    if (_onlineVoteKickButton == null)
+                    {
+                        if (OnlineFriend == null)
+                            return null;
+                        _onlineVoteKickButton = OnlineFriend.Find("VoteKickButton");
+                    }
+                    return _onlineVoteKickButton;
+                }
+            }
+            #endregion
+
+            #region OfflineFriend Properties
+            public static Transform OfflineJoinButton
+            {
+                // Why does this exist?
+                get
+                {
+                    if (_offlineJoinButton == null)
+                    {
+                        if (OfflineFriend == null)
+                            return null;
+                        _offlineJoinButton = OfflineFriend.Find("JoinButton");
+                    }
+                    return _offlineJoinButton;
                 }
             }
             #endregion

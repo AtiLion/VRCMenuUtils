@@ -25,17 +25,22 @@ namespace VRCMenuUtils
         private static UtilExecutor _targetExecutor = null;
         #endregion
 
-        #region VRCMenuUtils Delegates
-        public delegate void ElementChangeDelegate(Transform transform);
+        #region VRCMenuUtils Properties
+        public static bool IsIntialized => _UIInitialized;
         #endregion
 
         #region UserInfo Variables
         public static VRCEUiVerticalScrollView _userInfoScrollView;
         private static VRCEUiButton _userInfoMoreButton;
+        private static Transform[] _userInfoDefaultButtons;
         #endregion
 
         #region UserInfo Properties
         internal static List<Transform> UserInfoButtons = new List<Transform>();
+        #endregion
+
+        #region VRCMenuUtils Delegates
+        public delegate void ElementChangeDelegate(Transform transform);
         #endregion
 
         #region UserInfo Events
@@ -77,6 +82,24 @@ namespace VRCMenuUtils
         }
         #endregion
 
+        #region UserInfo Control Functions
+        internal static void SetUserInfoUIState(bool active)
+        {
+            // Modify VRChat buttons
+            foreach (Transform button in _userInfoDefaultButtons)
+                button.gameObject.SetActive(!active);
+
+            // Change Scrollview
+            _userInfoScrollView.Control.gameObject.SetActive(active);
+
+            // Change text
+            if (active)
+                _userInfoMoreButton.Text.text = "Less";
+            else
+                _userInfoMoreButton.Text.text = "More";
+        }
+        #endregion
+
         #region MenuUtils Coroutine Functions
         public static IEnumerator WaitForInit()
         {
@@ -109,52 +132,31 @@ namespace VRCMenuUtils
                 yield return null;
 
             // Get UserInfo defaults
-            Transform[] userInfoButtons = new Transform[]
+            _userInfoDefaultButtons = new Transform[]
             {
                 VRCEUi.InternalUserInfoScreen.PlaylistsButton,
                 VRCEUi.InternalUserInfoScreen.FavoriteButton,
-                VRCEUi.InternalUserInfoScreen.ReportButton
+                VRCEUi.InternalUserInfoScreen.ReportButton,
+                VRCEUi.InternalUserInfoScreen.OnlineVoteKickButton,
+                VRCEUi.InternalUserInfoScreen.OnlineJoinButton,
+                VRCEUi.InternalUserInfoScreen.OfflineJoinButton
             };
-            if (userInfoButtons.Any(a => a == null))
+            if (_userInfoDefaultButtons.Any(a => a == null))
             {
                 MVRCLogger.LogError("Failed to get UserInfo default buttons!");
                 yield break;
             }
-            Vector3 userInfoButtonPos = userInfoButtons[0].GetComponent<RectTransform>().localPosition;
+            Vector3 userInfoButtonPos = _userInfoDefaultButtons[0].GetComponent<RectTransform>().localPosition;
 
             // Load UserInfo UI
             MVRCLogger.Log("Loading UserInfo UI...");
-            _userInfoScrollView = new VRCEUiVerticalScrollView("MoreScroll", new Vector2(userInfoButtonPos.x, userInfoButtonPos.y - 75f), new Vector2(200f, 75f * 3f), 35f, new RectOffset(0, 0, 17, 17), VRCEUi.InternalUserInfoScreen.UserPanel);
+            _userInfoScrollView = new VRCEUiVerticalScrollView("MoreScroll", new Vector2(userInfoButtonPos.x, userInfoButtonPos.y - (75f * 2f)), new Vector2(200f, 75f * 5f), 35f, new RectOffset(0, 0, 17, 17), VRCEUi.InternalUserInfoScreen.UserPanel);
             _userInfoScrollView.Control.gameObject.SetActive(false);
 
             _userInfoMoreButton = new VRCEUiButton("More", new Vector2(userInfoButtonPos.x, userInfoButtonPos.y + 75f), "More", VRCEUi.InternalUserInfoScreen.UserPanel);
             _userInfoMoreButton.Button.onClick.AddListener(() =>
-            {
-                if (_userInfoMoreButton.Text.text == "More")
-                {
-                    // Modify VRChat buttons
-                    foreach (Transform button in userInfoButtons)
-                        button.gameObject.SetActive(false);
-
-                    // Change Scrollview
-                    _userInfoScrollView.Control.gameObject.SetActive(true);
-
-                    // Change text
-                    _userInfoMoreButton.Text.text = "Less";
-                }
-                else
-                {
-                    // Modify VRChat buttons
-                    foreach (Transform button in userInfoButtons)
-                        button.gameObject.SetActive(true);
-
-                    // Change Scrollview
-                    _userInfoScrollView.Control.gameObject.SetActive(false);
-
-                    // Change text
-                    _userInfoMoreButton.Text.text = "More";
-                }
-            });
+                SetUserInfoUIState(_userInfoMoreButton.Text.text == "More"));
+            VRCEUi.UserInfoScreen.AddComponent<UserInfoActivityManager>();
             MVRCLogger.Log("UserInfo UI has been loaded!");
 
             // Finish

@@ -32,7 +32,7 @@ namespace VRChat.UI
         public Image Image { get; private set; }
         #endregion
 
-        public VRCEUiGridScrollView(string name, Vector2 position, Vector2 size, float spacing, Vector2 cellSize, RectOffset padding = null, Transform parent = null)
+        public VRCEUiGridScrollView(string name, Vector2 position, Vector2 size, float spacing, Vector2 cellSize, int cellCount, RectOffset padding = null, Transform parent = null)
         {
             // Create game objects
             GameObject goControl = new GameObject(name);
@@ -90,7 +90,7 @@ namespace VRChat.UI
             LayoutGroup.startCorner = GridLayoutGroup.Corner.UpperLeft;
             LayoutGroup.startAxis = GridLayoutGroup.Axis.Horizontal;
             LayoutGroup.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
-            LayoutGroup.constraintCount = 5;
+            LayoutGroup.constraintCount = cellCount;
             LayoutGroup.cellSize = cellSize;
             if (padding != null)
                 LayoutGroup.padding = padding;

@@ -74,6 +74,7 @@
   <ItemGroup>
     <Compile Include="MVRCLogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserInfoActivityManager.cs" />
     <Compile Include="UtilExecutor.cs" />
     <Compile Include="VRChat\UI\VRCEUi.cs" />
     <Compile Include="VRChat\UI\VRCEUiButton.cs" />

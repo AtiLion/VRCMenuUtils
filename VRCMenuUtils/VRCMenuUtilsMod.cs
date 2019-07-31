@@ -31,6 +31,23 @@ namespace VRCMenuUtils
         {
             yield return VRCMenuUtils.WaitForInit();
 
+            // Grab all the buttons
+            /*foreach (Button button in VRCEUi.UserInfoScreen.GetComponentsInChildren<Button>(true))
+            {
+                if (button.transform.parent == null)
+                    continue;
+                string buttonPosition = button.transform.name;
+                Transform position = button.transform.parent;
+
+                while(position.name != VRCEUi.UserInfoScreen.name)
+                {
+                    buttonPosition += " -> " + position.name;
+                    if (position.parent != null)
+                        position = position.parent;
+                }
+                MVRCLogger.Log(buttonPosition);
+            }*/
+
             // User Info
             for(int i = 0; i < 10; i++)
             {
