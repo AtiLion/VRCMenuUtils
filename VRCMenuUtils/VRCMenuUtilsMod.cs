@@ -27,30 +27,31 @@ namespace VRCMenuUtils
         {
             MVRCLogger.Log("Starting VRCMenuUtils...");
 
-            ModManager.StartCoroutine(WaitForUIManager());
+            ModManager.StartCoroutine(ExecuteUI());
 
             MVRCLogger.Log("Started VRCMenuUtils!");
         }
         #endregion
 
-        #region Coroutine Functions
+        private IEnumerator ExecuteUI()
+        {
+            yield return VRCMenuUtils.WaitForUtilsLoad();
+
+            for(int i = 0; i < 10; i++)
+            {
+                VRCEUiButton button = new VRCEUiButton("Test " + i, new Vector2(0f, 0f), "Test " + i);
+
+                VRCMenuUtils.AddUserInfoButton(button);
+            }
+            MVRCLogger.Log("Added buttons!");
+        }
+
+        /*#region Coroutine Functions
         private IEnumerator WaitForUIManager()
         {
             yield return VRCUiManagerUtils.WaitForUiManagerInit();
 
             SetupUserInfo();
-
-            // Debug
-            /*Transform target = VRCEUi.InternalUserInfoScreen.UserPanel;
-            MVRCLogger.Log("Transform: " + target.name);
-            foreach (Component component in target.GetComponents<Component>())
-                MVRCLogger.Log(" - " + component);
-            for (int i = 0; i < target.childCount; i++)
-            {
-                MVRCLogger.Log("Transform: " + target.GetChild(i).name);
-                foreach (Component component in target.GetChild(i).GetComponents<Component>())
-                    MVRCLogger.Log(" - " + component);
-            }*/
 
             for (int i = 0; i < 24; i++)
             {
@@ -120,16 +121,7 @@ namespace VRCMenuUtils
                     UserInfoMore.Text.text = "More";
                 }
             });
-
-            // Add required events
-            VRCMenuUtils.OnUserInfoButtonAdd += button =>
-            {
-                if (UserInfoMore == null || button == null)
-                    return;
-
-
-            };
         }
-        #endregion
+        #endregion*/
     }
 }
