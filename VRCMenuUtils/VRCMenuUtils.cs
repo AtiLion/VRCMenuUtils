@@ -135,7 +135,25 @@ namespace VRCMenuUtils
                 }
             });
             MVRCLogger.Log("UserInfo UI has been loaded!");
-
+            try
+            {
+                foreach (Button button in _userInfoMoreButton.Button.transform.parent.GetComponentsInChildren<Button>())
+                {
+                    if (button != _userInfoMoreButton.Button.GetComponent<Button>())
+                    {
+                        GameObject buttonObj = button.gameObject;
+                        Transform buttonTrans = button.transform;
+                        if (Vector3.Distance(buttonTrans.position, _userInfoMoreButton.Position.position) < 5)
+                        {
+                            MVRCLogger.Log("Found an overlapping button");
+                            AddUserInfoButton(buttonTrans);
+                        }
+                    }
+                }
+            } catch (Exception ex)
+            {
+                MVRCLogger.Log("Nearby buttons couldn't be found: " + ex.ToString());
+            }
             // Finish
             OnUserInfoButtonAdd += _UserInfoButtonAdded;
             _UIInitialized = true;
