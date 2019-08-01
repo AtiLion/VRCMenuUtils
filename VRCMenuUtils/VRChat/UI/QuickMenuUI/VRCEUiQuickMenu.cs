@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 using VRCMenuUtils;
 
-namespace VRChat.UI
+namespace VRChat.UI.QuickMenuUI
 {
     public class VRCEUiQuickMenu
     {
@@ -20,7 +20,7 @@ namespace VRChat.UI
         public Transform Control { get; private set; }
         #endregion
 
-        public VRCEUiQuickMenu(string name, bool ignoreBack = true)
+        public VRCEUiQuickMenu(string name, bool addBack = true)
         {
             // Get required information
             Transform orgControl = VRCEUi.InternalQuickMenu.CameraMenu;
@@ -50,7 +50,7 @@ namespace VRChat.UI
             {
                 if (button == null)
                     continue;
-                if (button.name == "BackButton" && ignoreBack)
+                if (button.name == "BackButton" && addBack)
                     continue;
                 GameObject.Destroy(button.gameObject);
             }

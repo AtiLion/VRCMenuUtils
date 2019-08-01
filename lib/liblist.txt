@@ -8,4 +8,3 @@ UnityEngine.UIModule.dll
 VRCCore-Standalone.dll
 VRCSDK2.dll
 VRCModLoader.dll
-VRCTools.dll

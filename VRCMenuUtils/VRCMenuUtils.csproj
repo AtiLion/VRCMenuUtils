@@ -76,12 +76,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserInfoActivityManager.cs" />
     <Compile Include="UtilExecutor.cs" />
+    <Compile Include="VRChat\UI\Scrolling\VRCEUiPageScrollView.cs" />
     <Compile Include="VRChat\UI\VRCEUi.cs" />
     <Compile Include="VRChat\UI\VRCEUiButton.cs" />
-    <Compile Include="VRChat\UI\VRCEUiGridScrollView.cs" />
-    <Compile Include="VRChat\UI\VRCEUiQuickButton.cs" />
-    <Compile Include="VRChat\UI\VRCEUiQuickMenu.cs" />
-    <Compile Include="VRChat\UI\VRCEUiVerticalScrollView.cs" />
+    <Compile Include="VRChat\UI\Scrolling\VRCEUiGridScrollView.cs" />
+    <Compile Include="VRChat\UI\QuickMenuUI\VRCEUiQuickButton.cs" />
+    <Compile Include="VRChat\UI\QuickMenuUI\VRCEUiQuickMenu.cs" />
+    <Compile Include="VRChat\UI\Scrolling\VRCEUiVerticalScrollView.cs" />
     <Compile Include="VRChat\UI\VRCEUiText.cs" />
     <Compile Include="VRChat\UI\VRCEUiVolumeControl.cs" />
     <Compile Include="VRCMenuUtils.cs" />

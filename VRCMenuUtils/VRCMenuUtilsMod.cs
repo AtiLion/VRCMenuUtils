@@ -60,7 +60,7 @@ namespace VRCMenuUtils
             }*/
 
             // User Info
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 9; i++)
             {
                 VRCEUiButton button = new VRCEUiButton("Test " + i, new Vector2(0f, 0f), "Test " + i);
 

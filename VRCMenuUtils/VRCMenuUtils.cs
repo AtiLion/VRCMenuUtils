@@ -9,6 +9,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 using VRChat.UI;
+using VRChat.UI.QuickMenuUI;
+using VRChat.UI.Scrolling;
 
 namespace VRCMenuUtils
 {
@@ -29,7 +31,7 @@ namespace VRCMenuUtils
         #endregion
 
         #region UserInfo Variables
-        private static VRCEUiVerticalScrollView _userInfoScrollView;
+        private static VRCEUiPageScrollView _userInfoScrollView;
         private static VRCEUiButton _userInfoMoreButton;
         private static Transform[] _userInfoDefaultButtons;
         #endregion
@@ -166,7 +168,7 @@ namespace VRCMenuUtils
 
             // Load UserInfo UI
             MVRCLogger.Log("Loading UserInfo UI...");
-            _userInfoScrollView = new VRCEUiVerticalScrollView("MoreScroll", new Vector2(userInfoButtonPos.x, userInfoButtonPos.y - (75f * 2f)), new Vector2(200f, 75f * 5f), 35f, new RectOffset(0, 0, 17, 17), VRCEUi.InternalUserInfoScreen.UserPanel);
+            _userInfoScrollView = new VRCEUiPageScrollView("MoreScroll", new Vector2(userInfoButtonPos.x, userInfoButtonPos.y + 35f), new Vector2(200f, 75f * 5f), 75f, 3, 33f, VRCEUi.InternalUserInfoScreen.UserPanel);
             _userInfoScrollView.Control.gameObject.SetActive(false);
 
             _userInfoMoreButton = new VRCEUiButton("More", new Vector2(userInfoButtonPos.x, userInfoButtonPos.y + 75f), "More", VRCEUi.InternalUserInfoScreen.UserPanel);
@@ -210,17 +212,8 @@ namespace VRCMenuUtils
         #endregion
 
         #region Control Events
-        private static void _UserInfoButtonAdded(Transform button)
-        {
-            // Setup button internals
-            button.SetParent(_userInfoScrollView.ContentControl, false);
-
-            // Setup button UI
-            Vector2 scale = button.GetComponent<RectTransform>().sizeDelta;
-            LayoutElement element = button.gameObject.AddComponent<LayoutElement>();
-            element.preferredWidth = scale.x;
-            element.preferredHeight = scale.y;
-        }
+        private static void _UserInfoButtonAdded(Transform button) =>
+            _userInfoScrollView.AddItem(button);
         #endregion
     }
 }

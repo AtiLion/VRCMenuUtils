@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 using VRCMenuUtils;
 
-namespace VRChat.UI
+namespace VRChat.UI.Scrolling
 {
     public class VRCEUiVerticalScrollView
     {
