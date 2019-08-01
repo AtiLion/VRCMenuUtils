@@ -11,6 +11,7 @@ using VRCTools;
 using VRCModLoader;
 
 using VRChat.UI;
+using VRChat.UI.QuickMenuUI;
 
 namespace VRCMenuUtils
 {
@@ -48,7 +49,7 @@ namespace VRCMenuUtils
                 MVRCLogger.Log(buttonPosition);
             }*/
             // Grab all transforms
-            /*Transform target = VRCEUi.QuickMenu.transform.Find("EmojiMenu");
+            /*Transform target = VRCEUi.InternalQuickMenu.EmojiMenu;
             MVRCLogger.Log("Transform: " + target.name);
             foreach (Component component in target.GetComponents<Component>())
                 MVRCLogger.Log(" - " + component);
@@ -58,6 +59,14 @@ namespace VRCMenuUtils
                 foreach (Component component in target.GetChild(i).GetComponents<Component>())
                     MVRCLogger.Log(" - " + component);
             }*/
+
+            // Quick Menu
+            for (int i = 0; i < 25; i++)
+            {
+                VRCEUiQuickButton button = new VRCEUiQuickButton("Test " + i, new Vector2(0f, 0f), "Test " + i, "Test tooltip " + i);
+
+                VRCMenuUtils.AddQuickMenuButton(button);
+            }
 
             // User Info
             for (int i = 0; i < 9; i++)

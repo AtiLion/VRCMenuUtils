@@ -161,6 +161,7 @@ namespace VRChat.UI
             #region QuickMenu Variables
             private static Transform _shortcutMenu;
             private static Transform _cameraMenu;
+            private static Transform _emojiMenu;
             private static Transform _newElements;
 
             private static FieldInfo _fiCurrentPage;
@@ -190,6 +191,19 @@ namespace VRChat.UI
                         _cameraMenu = QuickMenu.transform.Find("CameraMenu");
                     }
                     return _cameraMenu;
+                }
+            }
+            public static Transform EmojiMenu
+            {
+                get
+                {
+                    if (_emojiMenu == null)
+                    {
+                        if (QuickMenu == null)
+                            return null;
+                        _emojiMenu = QuickMenu.transform.Find("EmojiMenu");
+                    }
+                    return _emojiMenu;
                 }
             }
             public static Transform NewElements

@@ -35,23 +35,24 @@ namespace VRCMenuUtils
         private static VRCEUiButton _userInfoMoreButton;
         private static Transform[] _userInfoDefaultButtons;
         #endregion
-        #region UserInfo Properties
-        internal static List<Transform> UserInfoButtons = new List<Transform>();
-        #endregion
 
         #region QuickMenu Variables
         private static VRCEUiQuickButton _quickMenuMoreButton;
-        private static VRCEUiQuickMenu _quickMenuMoreMenu;
+        private static VRCEUiQuickScrollMenu _quickMenuMoreMenu;
         private static VRCEUiQuickButton _quickMenuLessButton;
         #endregion
 
         #region VRCMenuUtils Delegates
         public delegate void ElementChangeDelegate(Transform transform);
+        public delegate void QuickMenuElementChangeDelegate(VRCEUiQuickButton button);
         #endregion
 
         #region UserInfo Events
         public static event ElementChangeDelegate OnUserInfoButtonAdd;
-        public static event ElementChangeDelegate OnUserInfoButtonRemove;
+        #endregion
+
+        #region QuickMenu Events
+        public static event QuickMenuElementChangeDelegate OnQuickMenuButtonAdd;
         #endregion
 
         static VRCMenuUtils()
@@ -72,19 +73,17 @@ namespace VRCMenuUtils
             if (!_UIInitialized)
                 return;
 
-            UserInfoButtons.Add(button);
             OnUserInfoButtonAdd?.Invoke(button);
         }
+        #endregion
 
-        public static void RemoveUserInfoButton(VRCEUiButton button) =>
-            RemoveUserInfoButton(button.Control);
-        public static void RemoveUserInfoButton(Transform button)
+        #region QuickMenu Functions
+        public static void AddQuickMenuButton(VRCEUiQuickButton button)
         {
             if (!_UIInitialized)
                 return;
 
-            UserInfoButtons.Remove(button);
-            OnUserInfoButtonRemove?.Invoke(button);
+            OnQuickMenuButtonAdd?.Invoke(button);
         }
         #endregion
 
@@ -141,8 +140,10 @@ namespace VRCMenuUtils
 
             // Finish
             OnUserInfoButtonAdd += _UserInfoButtonAdded;
+            OnQuickMenuButtonAdd += _QuickMenuButtonAdded;
             _UIInitialized = true;
         }
+
         private static IEnumerator SetupUserInfo()
         {
             // Run UI checks
@@ -199,7 +200,7 @@ namespace VRCMenuUtils
                 _quickMenuMoreMenu.Control.gameObject.SetActive(true);
             });
 
-            _quickMenuMoreMenu = new VRCEUiQuickMenu("MoreMenu", false);
+            _quickMenuMoreMenu = new VRCEUiQuickScrollMenu("MoreMenu", false);
             _quickMenuLessButton = new VRCEUiQuickButton("LessButton", new Vector2(quickMenuButtonPos.x, quickMenuButtonPos.y + 420f), "Less", "Takes you back to the main Quick Menu screen.", _quickMenuMoreMenu.Control);
             _quickMenuLessButton.Button.onClick.AddListener(() =>
             {
@@ -214,6 +215,8 @@ namespace VRCMenuUtils
         #region Control Events
         private static void _UserInfoButtonAdded(Transform button) =>
             _userInfoScrollView.AddItem(button);
+        private static void _QuickMenuButtonAdded(VRCEUiQuickButton button) =>
+            _quickMenuMoreMenu.AddButton(button);
         #endregion
     }
 }

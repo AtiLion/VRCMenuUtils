@@ -46,6 +46,7 @@ namespace VRChat.UI.QuickMenuUI
             // Set required parts
             goControl.name = name;
 
+            // Clear menu
             foreach (Transform button in Control)
             {
                 if (button == null)
@@ -54,6 +55,9 @@ namespace VRChat.UI.QuickMenuUI
                     continue;
                 GameObject.Destroy(button.gameObject);
             }
+
+            // Finish
+            Success = true;
         }
     }
 }
