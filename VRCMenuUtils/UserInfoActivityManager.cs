@@ -11,10 +11,10 @@ namespace VRCMenuUtils
     {
         void OnDisable()
         {
-            if (!VRCMenuUtils.IsIntialized)
+            if (!VRCMenuUtilsAPI.IsIntialized)
                 return;
 
-            VRCMenuUtils.SetUserInfoUIState(false);
+            VRCMenuUtilsAPI.SetUserInfoUIState(false);
         }
     }
 }

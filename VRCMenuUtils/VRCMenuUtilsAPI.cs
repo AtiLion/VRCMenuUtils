@@ -19,7 +19,7 @@ using VRChat.UI.Scrolling;
 namespace VRCMenuUtils
 {
     // Use this as the API endpoint
-    public static class VRCMenuUtils
+    public static class VRCMenuUtilsAPI
     {
         #region VRChat Reflection
         private static MethodInfo _miVRCUiManagerGetInstace;
@@ -28,8 +28,7 @@ namespace VRCMenuUtils
 
         #region VRCMenuUtils Variables
         private static bool _UIInitialized = false;
-        private static GameObject _targetHook = null;
-        private static UtilExecutor _targetExecutor = null;
+        private static bool _StartedUp = false;
         #endregion
         #region VRCMenuUtils Properties
         public static bool IsIntialized => _UIInitialized;
@@ -60,16 +59,6 @@ namespace VRCMenuUtils
         #region QuickMenu Events
         public static event QuickMenuElementChangeDelegate OnQuickMenuButtonAdd;
         #endregion
-
-        static VRCMenuUtils()
-        {
-            // We can assume UnityEngine is loaded by this point
-            _targetHook = new GameObject();
-            _targetExecutor = _targetHook.AddComponent<UtilExecutor>();
-            GameObject.DontDestroyOnLoad(_targetHook);
-
-            _targetExecutor.StartCoroutine(SetupUI());
-        }
 
         #region UserInfo Functions
         public static void AddUserInfoButton(VRCEUiButton button) =>
@@ -114,7 +103,11 @@ namespace VRCMenuUtils
         #region MenuUtils Coroutine Functions
         public static IEnumerator WaitForInit()
         {
-            // Dual loading sucks I swear
+            if(!_StartedUp)
+            {
+                _StartedUp = true;
+                yield return SetupUI();
+            }
             while (!_UIInitialized)
                 yield return null;
         }
