@@ -7,6 +7,10 @@ using System.Text;
 
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Networking;
+
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 using VRChat.UI;
 using VRChat.UI.QuickMenuUI;
@@ -19,6 +23,7 @@ namespace VRCMenuUtils
     {
         #region VRChat Reflection
         private static MethodInfo _miVRCUiManagerGetInstace;
+        private static MethodInfo _miVRCUiPopupManagerGetInstance;
         #endregion
 
         #region VRCMenuUtils Variables
@@ -28,6 +33,7 @@ namespace VRCMenuUtils
         #endregion
         #region VRCMenuUtils Properties
         public static bool IsIntialized => _UIInitialized;
+        public static string Version => "0.1.0";
         #endregion
 
         #region UserInfo Variables
@@ -130,7 +136,22 @@ namespace VRCMenuUtils
             MVRCLogger.Log("Waiting for VRCUiManager to load...");
             while (_miVRCUiManagerGetInstace.Invoke(null, null) == null)
                 yield return null;
+            if(_miVRCUiPopupManagerGetInstance == null)
+            {
+                _miVRCUiPopupManagerGetInstance = typeof(VRCUiPopupManager).GetMethod("get_Instance", BindingFlags.Public | BindingFlags.Static);
+                if (_miVRCUiPopupManagerGetInstance == null)
+                {
+                    MVRCLogger.LogError("Failed to find get_Instance in VRCUiPopupManager!");
+                    yield break;
+                }
+
+                while (_miVRCUiPopupManagerGetInstance.Invoke(null, null) == null)
+                    yield return null;
+            }
             MVRCLogger.Log("VRCUiManager has been loaded!");
+
+            // Check for updates
+            yield return CheckForUpdates();
 
             // Setup UserInfo
             yield return SetupUserInfo();
@@ -142,6 +163,55 @@ namespace VRCMenuUtils
             OnUserInfoButtonAdd += _UserInfoButtonAdded;
             OnQuickMenuButtonAdd += _QuickMenuButtonAdded;
             _UIInitialized = true;
+        }
+        private static IEnumerator CheckForUpdates()
+        {
+            MVRCLogger.Log("Checking for updates...");
+            using(UnityWebRequest request = UnityWebRequest.Get("https://api.github.com/AtiLion/VRCMenuUtils/releases/latest"))
+            {
+                yield return request.SendWebRequest();
+
+                if(request.isNetworkError)
+                {
+                    MVRCLogger.LogError("Network error! Failed to check for updates!");
+                    yield break;
+                }
+                if(request.isHttpError)
+                {
+                    MVRCLogger.LogError("HTTP error! Failed to check for updates!");
+                    yield break;
+                }
+                try
+                {
+                    JObject data = JObject.Parse(request.downloadHandler.text);
+                    JToken version;
+
+                    if(!data.TryGetValue("tag_name", out version))
+                    {
+                        MVRCLogger.LogError("No version data found!");
+                        yield break;
+                    }
+                    if((string)version == Version)
+                    {
+                        MVRCLogger.Log("No updates found!");
+                        yield break;
+                    }
+
+                    MVRCLogger.Log("New update has been found! Version: " + (string)version);
+                    VRCUiPopupManager popupManager = (VRCUiPopupManager)_miVRCUiPopupManagerGetInstance.Invoke(null, null);
+                    popupManager.ShowStandardPopup(
+                            "VRCMenuUtils Update",
+                            "A new VRCMenuUtils update is now available! Please update as soon as you can.",
+                            "Close", () => popupManager.HideCurrentPopup(),
+                            "Open in browser", () => System.Diagnostics.Process.Start("https://github.com/AtiLion/VRCMenuUtils/releases")
+                        );
+                }
+                catch (Exception ex)
+                {
+                    MVRCLogger.LogError("Version check failed! Invalid format!", ex);
+                    yield break;
+                }
+            }
         }
 
         private static IEnumerator SetupUserInfo()
@@ -188,6 +258,7 @@ namespace VRCMenuUtils
             Vector2 quickMenuButtonPos = VRCEUi.InternalQuickMenu.ReportWorldButton.GetComponent<RectTransform>().localPosition;
 
             // Load QuickMenu UI
+            MVRCLogger.Log("Loading QuickMenu UI...");
             _quickMenuMoreButton = new VRCEUiQuickButton("MoreButton", new Vector2(quickMenuButtonPos.x, quickMenuButtonPos.y + 840f), "More", "Shows more Quick Menu buttons that mods have added.", VRCEUi.InternalQuickMenu.ShortcutMenu);
             _quickMenuMoreButton.Button.onClick.AddListener(() =>
             {
@@ -209,6 +280,7 @@ namespace VRCMenuUtils
 
                 VRCEUi.QuickMenu.SetMenuIndex(0);
             });
+            MVRCLogger.Log("QuickMenu UI has been loaded!");
         }
         #endregion
 

@@ -37,6 +37,10 @@
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>..\lib\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -58,17 +62,14 @@
     <Reference Include="UnityEngine.UIModule">
       <HintPath>..\lib\UnityEngine.UIModule.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestModule">
+      <HintPath>..\lib\UnityEngine.UnityWebRequestModule.dll</HintPath>
+    </Reference>
     <Reference Include="VRCCore-Standalone">
       <HintPath>..\lib\VRCCore-Standalone.dll</HintPath>
     </Reference>
-    <Reference Include="VRCModLoader">
-      <HintPath>..\lib\VRCModLoader.dll</HintPath>
-    </Reference>
     <Reference Include="VRCSDK2">
       <HintPath>..\lib\VRCSDK2.dll</HintPath>
-    </Reference>
-    <Reference Include="VRCTools">
-      <HintPath>..\lib\VRCTools.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -87,7 +88,6 @@
     <Compile Include="VRChat\UI\VRCEUiText.cs" />
     <Compile Include="VRChat\UI\VRCEUiVolumeControl.cs" />
     <Compile Include="VRCMenuUtils.cs" />
-    <Compile Include="VRCMenuUtilsMod.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

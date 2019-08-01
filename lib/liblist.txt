@@ -5,6 +5,7 @@ UnityEngine.dll
 UnityEngine.TextRenderingModule.dll
 UnityEngine.UI.dll
 UnityEngine.UIModule.dll
+UnityEngine.UnityWebRequestModule.dll
 VRCCore-Standalone.dll
 VRCSDK2.dll
-VRCModLoader.dll
+Newtonsoft.Json.dll
