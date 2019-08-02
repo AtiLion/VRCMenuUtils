@@ -24,6 +24,7 @@ namespace VRChat.UI.QuickMenuUI
 
         public List<VRCEUiScrollPage> Pages { get; private set; } = new List<VRCEUiScrollPage>();
         public int CurrentPage { get; private set; } = 0;
+        public bool HasButtons => Pages.Count > 0 && !Pages[0].IsEmpty;
 
         public RectTransform ContentPosition { get; private set; }
         #endregion

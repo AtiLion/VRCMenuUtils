@@ -25,6 +25,7 @@ namespace VRChat.UI.Scrolling
         public int CurrentPage { get; private set; } = 0;
         public float Spacing { get; private set; }
         public float Padding { get; private set; }
+        public bool HasItems => Pages.Count > 0 && !Pages[0].IsEmpty;
 
         public RectTransform Position { get; private set; }
         public RectTransform ContentPosition { get; private set; }
