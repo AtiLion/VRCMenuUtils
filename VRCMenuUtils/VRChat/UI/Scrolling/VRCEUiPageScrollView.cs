@@ -34,8 +34,8 @@ namespace VRChat.UI.Scrolling
         #endregion
 
         #region Control Properties
-        public Button UpButton { get; private set; }
-        public Button DownButton { get; private set; }
+        public Button UpButtonObject { get; private set; }
+        public Button DownButtonObject { get; private set; }
         #endregion
 
         public VRCEUiPageScrollView(string name, Vector2 position, Vector2 size, float spacing, int itemsPerPage, float padding = 0f, Transform parent = null)
@@ -72,11 +72,11 @@ namespace VRChat.UI.Scrolling
 
             // Setup UpButton
             UpButtonPosition = buttonUp.Position;
-            UpButton = buttonUp.Button;
+            UpButtonObject = buttonUp.ButtonObject;
             UpButtonControl = buttonUp.Control;
-            UpButton.interactable = false;
+            UpButtonObject.interactable = false;
             UpButtonPosition.sizeDelta -= new Vector2(0f, Mathf.Ceil(UpButtonPosition.sizeDelta.y / 2f));
-            UpButton.onClick.AddListener(() =>
+            UpButtonObject.onClick.AddListener(() =>
             {
                 if (CurrentPage < 1)
                     return;
@@ -86,11 +86,11 @@ namespace VRChat.UI.Scrolling
 
             // Setup DownButton
             DownButtonPosition = buttonDown.Position;
-            DownButton = buttonDown.Button;
+            DownButtonObject = buttonDown.ButtonObject;
             DownButtonControl = buttonDown.Control;
-            DownButton.interactable = false;
+            DownButtonObject.interactable = false;
             DownButtonPosition.sizeDelta -= new Vector2(0f, Mathf.Ceil(DownButtonPosition.sizeDelta.y / 2f));
-            DownButton.onClick.AddListener(() =>
+            DownButtonObject.onClick.AddListener(() =>
             {
                 if (CurrentPage >= (Pages.Count - 1))
                     return;
@@ -127,7 +127,7 @@ namespace VRChat.UI.Scrolling
             {
                 page = new VRCEUiScrollPage(ItemsPerPage, Spacing, Padding, this);
 
-                DownButton.interactable = true;
+                DownButtonObject.interactable = true;
                 Pages.Add(page);
             }
 
@@ -145,13 +145,13 @@ namespace VRChat.UI.Scrolling
             CurrentPage = id;
 
             if (CurrentPage > 0)
-                UpButton.interactable = true;
+                UpButtonObject.interactable = true;
             else
-                UpButton.interactable = false;
+                UpButtonObject.interactable = false;
             if ((Pages.Count - 1) <= CurrentPage)
-                DownButton.interactable = false;
+                DownButtonObject.interactable = false;
             else
-                DownButton.interactable = true;
+                DownButtonObject.interactable = true;
             return true;
         }
         #endregion

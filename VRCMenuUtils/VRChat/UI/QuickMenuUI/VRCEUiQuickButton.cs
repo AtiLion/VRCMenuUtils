@@ -24,9 +24,22 @@ namespace VRChat.UI.QuickMenuUI
         #endregion
 
         #region Control Properties
-        public Button Button { get; private set; }
-        public Text Text { get; private set; }
-        public UiTooltip Tooltip { get; private set; }
+        public Button ButtonObject { get; private set; }
+        public Text TextObject { get; private set; }
+        public UiTooltip TooltipObject { get; private set; }
+        #endregion
+
+        #region Control Access Properties
+        public event Action OnClick;
+        public string Text
+        {
+            get => TextObject?.text;
+            set
+            {
+                if (TextObject != null)
+                    TextObject.text = value;
+            }
+        }
         #endregion
 
         public VRCEUiQuickButton(string name, Vector2 position, string text, string tooltip, Transform parent = null)
@@ -58,9 +71,9 @@ namespace VRChat.UI.QuickMenuUI
             GameObject.DestroyImmediate(Control.GetComponentsInChildren<Image>(true).First(a => a.transform != Control));
 
             // Set control properties
-            Button = Control.GetComponent<Button>();
-            Text = TextControl.GetComponent<Text>();
-            Tooltip = Control.GetComponent<UiTooltip>();
+            ButtonObject = Control.GetComponent<Button>();
+            TextObject = TextControl.GetComponent<Text>();
+            TooltipObject = Control.GetComponent<UiTooltip>();
 
             // Set required parts
             if (parent != null)
@@ -78,9 +91,10 @@ namespace VRChat.UI.QuickMenuUI
             Position.localRotation = tmpRT.localRotation;
 
             // Change UI properties
-            Text.text = text;
-            Button.onClick = new Button.ButtonClickedEvent();
-            Tooltip.text = tooltip;
+            TextObject.text = text;
+            ButtonObject.onClick = new Button.ButtonClickedEvent();
+            ButtonObject.onClick.AddListener(() => OnClick?.Invoke());
+            TooltipObject.text = tooltip;
 
             // Finish
             Success = true;

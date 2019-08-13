@@ -17,6 +17,7 @@ namespace VRChat.UI
     {
         #region VRChat Menu Variables
         private static QuickMenu _quickMenu;
+        private static GameObject _screenHeader;
 
         private static GameObject _avatarScreen;
         private static GameObject _detailsScreen;
@@ -27,7 +28,6 @@ namespace VRChat.UI
         private static GameObject _userInfoScreen;
         private static GameObject _worldsScreen;
         #endregion
-
         #region VRChat Menu Properties
         public static QuickMenu QuickMenu
         {
@@ -36,6 +36,15 @@ namespace VRChat.UI
                 if (_quickMenu == null)
                     _quickMenu = ((QuickMenu)typeof(QuickMenu).GetMethod("get_Instance", BindingFlags.Public | BindingFlags.Static).Invoke(null, null));
                 return _quickMenu;
+            }
+        }
+        public static GameObject ScreenHeader
+        {
+            get
+            {
+                if (_screenHeader == null)
+                    _screenHeader = GameObject.Find("UserInterface/MenuContent/Backdrop/Header");
+                return _screenHeader;
             }
         }
 
@@ -112,7 +121,6 @@ namespace VRChat.UI
             }
         }
         #endregion
-
         #region VRChat UI Functions
         public static Transform DuplicateButton(Transform button, string name, string text, Vector2 offset, Transform parent = null)
         {

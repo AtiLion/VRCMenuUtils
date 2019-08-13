@@ -26,8 +26,21 @@ namespace VRChat.UI
         #endregion
 
         #region Control Properties
-        public Button Button { get; private set; }
-        public Text Text { get; private set; }
+        public Button ButtonObject { get; private set; }
+        public Text TextObject { get; private set; }
+        #endregion
+
+        #region Control Access Properties
+        public event Action OnClick;
+        public string Text
+        {
+            get => TextObject?.text;
+            set
+            {
+                if (TextObject != null)
+                    TextObject.text = value;
+            }
+        }
         #endregion
 
         public VRCEUiButton(string name, Vector2 position, string text, Transform parent = null)
@@ -61,8 +74,8 @@ namespace VRChat.UI
             GameObject.DestroyImmediate(ButtonControl.GetComponent<VRCUiButton>());
 
             // Set control properties
-            Button = ButtonControl.GetComponent<Button>();
-            Text = TextControl.GetComponent<Text>();
+            ButtonObject = ButtonControl.GetComponent<Button>();
+            TextObject = TextControl.GetComponent<Text>();
 
             // Set required parts
             if (parent != null)
@@ -81,8 +94,9 @@ namespace VRChat.UI
             Position.localRotation = tmpRT.localRotation;
 
             // Change UI properties
-            Text.text = text;
-            Button.onClick = new Button.ButtonClickedEvent();
+            Text = text;
+            ButtonObject.onClick = new Button.ButtonClickedEvent();
+            ButtonObject.onClick.AddListener(() => OnClick?.Invoke());
 
             // Finish
             Success = true;

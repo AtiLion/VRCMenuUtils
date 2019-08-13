@@ -25,11 +25,11 @@ namespace VRChat.UI.Scrolling
         #endregion
 
         #region Control Properties
-        public ScrollRect ScrollRect { get; private set; }
-        public ContentSizeFitter SizeFitter { get; private set; }
-        public VerticalLayoutGroup LayoutGroup { get; private set; }
-        public Mask Mask { get; private set; }
-        public Image Image { get; private set; }
+        public ScrollRect ScrollRectObject { get; private set; }
+        public ContentSizeFitter SizeFitterObject { get; private set; }
+        public VerticalLayoutGroup LayoutGroupObject { get; private set; }
+        public Mask MaskObject { get; private set; }
+        public Image ImageObject { get; private set; }
         #endregion
 
         public VRCEUiVerticalScrollView(string name, Vector2 position, Vector2 size, float spacing, RectOffset padding = null, Transform parent = null)
@@ -43,11 +43,11 @@ namespace VRChat.UI.Scrolling
             ContentPosition = goContentControl.GetOrAddComponent<RectTransform>();
 
             // Create control properties
-            ScrollRect = goControl.AddComponent<ScrollRect>();
-            SizeFitter = goContentControl.AddComponent<ContentSizeFitter>();
-            LayoutGroup = goContentControl.AddComponent<VerticalLayoutGroup>();
-            Mask = goControl.AddComponent<Mask>();
-            Image = goControl.AddComponent<Image>();
+            ScrollRectObject = goControl.AddComponent<ScrollRect>();
+            SizeFitterObject = goContentControl.AddComponent<ContentSizeFitter>();
+            LayoutGroupObject = goContentControl.AddComponent<VerticalLayoutGroup>();
+            MaskObject = goControl.AddComponent<Mask>();
+            ImageObject = goControl.AddComponent<Image>();
 
             // Set UI properties
             Control = goControl.transform;
@@ -63,16 +63,16 @@ namespace VRChat.UI.Scrolling
             Control.localPosition = Vector3.zero;
             Position.localPosition = new Vector3(position.x, position.y, 0f);
             Position.sizeDelta = size;
-            ScrollRect.vertical = true;
-            ScrollRect.horizontal = false;
+            ScrollRectObject.vertical = true;
+            ScrollRectObject.horizontal = false;
 
             // Setup mask
-            Mask.showMaskGraphic = false;
+            MaskObject.showMaskGraphic = false;
             Texture2D texture = new Texture2D(2, 2);
             Color color = new Color(0f, 0f, 0f, 1f);
             texture.SetPixels(new Color[] { color, color, color, color });
             texture.Apply();
-            Image.sprite = Sprite.Create(texture, new Rect(0f, 0f, 2f, 2f), new Vector2(0f, 0f));
+            ImageObject.sprite = Sprite.Create(texture, new Rect(0f, 0f, 2f, 2f), new Vector2(0f, 0f));
 
             // Setup Content
             ContentControl.SetParent(Control);
@@ -84,18 +84,18 @@ namespace VRChat.UI.Scrolling
             ContentPosition.anchorMax = new Vector2(0.5f, 1f);
             ContentPosition.pivot = new Vector2(0.5f, 1f);
             ContentPosition.sizeDelta = new Vector2(size.x, spacing);
-            SizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
-            LayoutGroup.spacing = spacing;
-            LayoutGroup.childAlignment = TextAnchor.UpperCenter;
-            LayoutGroup.childForceExpandHeight = false;
-            LayoutGroup.childForceExpandWidth = false;
-            LayoutGroup.childControlHeight = true;
-            LayoutGroup.childControlWidth = true;
+            SizeFitterObject.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+            LayoutGroupObject.spacing = spacing;
+            LayoutGroupObject.childAlignment = TextAnchor.UpperCenter;
+            LayoutGroupObject.childForceExpandHeight = false;
+            LayoutGroupObject.childForceExpandWidth = false;
+            LayoutGroupObject.childControlHeight = true;
+            LayoutGroupObject.childControlWidth = true;
             if (padding != null)
-                LayoutGroup.padding = padding;
+                LayoutGroupObject.padding = padding;
 
-            ScrollRect.content = ContentPosition;
-            ScrollRect.viewport = Position;
+            ScrollRectObject.content = ContentPosition;
+            ScrollRectObject.viewport = Position;
 
             // Finish
             Success = true;

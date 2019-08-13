@@ -26,8 +26,31 @@ namespace VRChat.UI
         #endregion
 
         #region Control Properties
-        public Text Text { get; private set; }
-        public Slider Slider { get; private set; }
+        public Text TextObject { get; private set; }
+        public Slider SliderObject { get; private set; }
+        #endregion
+
+        #region Control Access Properties
+        public string Text
+        {
+            get => TextObject?.text;
+            set
+            {
+                if (TextObject != null)
+                    TextObject.text = value;
+            }
+        }
+        public float Value
+        {
+            get => SliderObject?.value ?? 0f;
+            set
+            {
+                if (SliderObject != null)
+                    SliderObject.value = value;
+            }
+        }
+
+        public event Action<float> OnValueChange;
         #endregion
 
         public VRCEUiVolumeControl(string name, Vector2 position, string text, float value = 1f, Transform parent = null)
@@ -40,7 +63,7 @@ namespace VRChat.UI
                 Success = false;
                 return;
             }
-
+            
             // Duplicate object
             GameObject goVolumeControl = GameObject.Instantiate(orgVolumeMaster.gameObject);
             if (goVolumeControl == null)
@@ -61,8 +84,8 @@ namespace VRChat.UI
             GameObject.DestroyImmediate(VolumeControl.GetComponent<RectTransform>());
 
             // Set control properties
-            Text = Label.GetComponent<Text>();
-            Slider = VolumeControl.GetComponent<Slider>();
+            TextObject = Label.GetComponent<Text>();
+            SliderObject = VolumeControl.GetComponent<Slider>();
 
             // Set required parts
             if (parent != null)
@@ -81,8 +104,9 @@ namespace VRChat.UI
             Label.GetComponent<RectTransform>().localPosition = Label.GetComponent<RectTransform>().localPosition + new Vector3(50f, 0f, 0f);
 
             // Change UI properties
-            Text.text = text;
-            Slider.value = value;
+            Text = text;
+            Value = value;
+            SliderObject.onValueChanged.AddListener(val => OnValueChange?.Invoke(val));
 
             // Finish
             Success = true;

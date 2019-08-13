@@ -50,6 +50,9 @@
     <Reference Include="UnityEngine">
       <HintPath>..\lib\UnityEngine.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.AudioModule">
+      <HintPath>..\lib\UnityEngine.AudioModule.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>..\lib\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
@@ -84,6 +87,7 @@
     <Compile Include="VRChat\UI\QuickMenuUI\VRCEUiQuickButton.cs" />
     <Compile Include="VRChat\UI\QuickMenuUI\VRCEUiQuickMenu.cs" />
     <Compile Include="VRChat\UI\Scrolling\VRCEUiVerticalScrollView.cs" />
+    <Compile Include="VRChat\UI\VRCEUiPage.cs" />
     <Compile Include="VRChat\UI\VRCEUiText.cs" />
     <Compile Include="VRChat\UI\VRCEUiVolumeControl.cs" />
     <Compile Include="VRCMenuUtilsAPI.cs" />

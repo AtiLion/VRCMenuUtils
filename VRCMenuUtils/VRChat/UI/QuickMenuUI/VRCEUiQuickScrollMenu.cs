@@ -30,8 +30,8 @@ namespace VRChat.UI.QuickMenuUI
         #endregion
 
         #region Control Properties
-        public Button UpButton { get; private set; }
-        public Button DownButton { get; private set; }
+        public Button UpButtonObject { get; private set; }
+        public Button DownButtonObject { get; private set; }
         #endregion
 
         public VRCEUiQuickScrollMenu(string name, bool addBack = true)
@@ -65,13 +65,13 @@ namespace VRChat.UI.QuickMenuUI
             ContentControl = goContent.transform;
 
             // Get buttons
-            UpButton = Control.Find("PageUp").GetComponent<Button>();
-            DownButton = Control.Find("PageDown").GetComponent<Button>();
+            UpButtonObject = Control.Find("PageUp").GetComponent<Button>();
+            DownButtonObject = Control.Find("PageDown").GetComponent<Button>();
 
             // Setup UpButton
-            UpButton.onClick = new Button.ButtonClickedEvent();
-            UpButton.interactable = false;
-            UpButton.onClick.AddListener(() =>
+            UpButtonObject.onClick = new Button.ButtonClickedEvent();
+            UpButtonObject.interactable = false;
+            UpButtonObject.onClick.AddListener(() =>
             {
                 if (CurrentPage < 1)
                     return;
@@ -80,9 +80,9 @@ namespace VRChat.UI.QuickMenuUI
             });
 
             // Setup DownButton
-            DownButton.onClick = new Button.ButtonClickedEvent();
-            DownButton.interactable = false;
-            DownButton.onClick.AddListener(() =>
+            DownButtonObject.onClick = new Button.ButtonClickedEvent();
+            DownButtonObject.interactable = false;
+            DownButtonObject.onClick.AddListener(() =>
             {
                 if (CurrentPage >= (Pages.Count - 1))
                     return;
@@ -94,7 +94,7 @@ namespace VRChat.UI.QuickMenuUI
             goControl.name = name;
 
             // Setup Content
-            RectTransform rtBtn = UpButton.transform.GetComponent<RectTransform>();
+            RectTransform rtBtn = UpButtonObject.transform.GetComponent<RectTransform>();
             ContentControl.SetParent(Control);
             ContentControl.localScale = Vector3.one;
             ContentControl.localRotation = Quaternion.identity;
@@ -146,7 +146,7 @@ namespace VRChat.UI.QuickMenuUI
             {
                 page = new VRCEUiScrollPage(this);
 
-                DownButton.interactable = true;
+                DownButtonObject.interactable = true;
                 Pages.Add(page);
             }
 
@@ -164,13 +164,13 @@ namespace VRChat.UI.QuickMenuUI
             CurrentPage = id;
 
             if (CurrentPage > 0)
-                UpButton.interactable = true;
+                UpButtonObject.interactable = true;
             else
-                UpButton.interactable = false;
+                UpButtonObject.interactable = false;
             if ((Pages.Count - 1) <= CurrentPage)
-                DownButton.interactable = false;
+                DownButtonObject.interactable = false;
             else
-                DownButton.interactable = true;
+                DownButtonObject.interactable = true;
             return true;
         }
         #endregion

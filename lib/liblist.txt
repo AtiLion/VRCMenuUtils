@@ -9,3 +9,4 @@ UnityEngine.UnityWebRequestModule.dll
 VRCCore-Standalone.dll
 VRCSDK2.dll
 Newtonsoft.Json.dll
+UnityEngine.AudioModule.dll

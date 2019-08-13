@@ -24,7 +24,19 @@ namespace VRChat.UI
         #endregion
 
         #region Control Properties
-        public Text Text { get; private set; }
+        public Text TextObject { get; private set; }
+        #endregion
+
+        #region Control Access Properties
+        public string Text
+        {
+            get => TextObject?.text;
+            set
+            {
+                if (TextObject != null)
+                    TextObject.text = value;
+            }
+        }
         #endregion
 
         public VRCEUiText(string name, Vector2 position, string text, Transform parent = null)
@@ -55,7 +67,7 @@ namespace VRChat.UI
             GameObject.DestroyImmediate(Control.GetComponent<RectTransform>());
 
             // Set control properties
-            Text = TextControl.GetComponent<Text>();
+            TextObject = TextControl.GetComponent<Text>();
 
             // Set required parts
             if (parent != null)
@@ -73,7 +85,7 @@ namespace VRChat.UI
             Position.localRotation = tmpRT.localRotation;
 
             // Change UI properties
-            Text.text = text;
+            TextObject.text = text;
 
             // Finish
             Success = true;
