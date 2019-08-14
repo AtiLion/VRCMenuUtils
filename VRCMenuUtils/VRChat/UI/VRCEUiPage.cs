@@ -57,7 +57,7 @@ namespace VRChat.UI
             Page = goControl.AddComponent<VRCUiPage>();
 
             // Set required parts
-            Control.SetParent(avatarScreen.transform.parent);
+            Control.SetParent(avatarScreen.transform.parent, false);
 
             // Change UI properties
             Page.AudioHide = avatarPage.AudioHide;

@@ -32,7 +32,7 @@ namespace VRCMenuUtils
         #endregion
         #region VRCMenuUtils Properties
         public static bool IsIntialized => _UIInitialized;
-        public static string Version => "0.2.0";
+        public static string Version => "0.2.1";
         #endregion
         #region VRCMenuUtils Delegates
         public delegate void ElementChangeDelegate(Transform transform);
