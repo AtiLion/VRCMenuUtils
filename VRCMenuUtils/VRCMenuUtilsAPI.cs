@@ -32,7 +32,7 @@ namespace VRCMenuUtils
         #endregion
         #region VRCMenuUtils Properties
         public static bool IsIntialized => _UIInitialized;
-        public static string Version => "0.2.1";
+        public static string Version => "0.3.0";
         #endregion
         #region VRCMenuUtils Delegates
         public delegate void ElementChangeDelegate(Transform transform);
@@ -152,6 +152,24 @@ namespace VRCMenuUtils
             VRCUiManager.StartCoroutine(placeUi());
             VRCUiManager.ShowScreen(page);
         }
+        public static void HideCurrentPopup() =>
+            VRCUiPopupManager?.HideCurrentPopup();
+
+        public static void Alert(string title, string body, Action<VRCUiPopup> additionalSetup = null) =>
+            VRCUiPopupManager?.ShowStandardPopup(title, body, additionalSetup);
+        public static void Alert(string title, string body, string middleButtonText, Action middleButtonAction, Action<VRCUiPopup> additionalSetup = null) =>
+            VRCUiPopupManager?.ShowStandardPopup(title, body, middleButtonText, middleButtonAction, additionalSetup);
+        public static void AlertV2(string title, string body, string middleButtonText, Action middleButtonAction, Action<VRCUiPopup> additionalSetup = null) =>
+            VRCUiPopupManager?.ShowStandardPopupV2(title, body, middleButtonText, middleButtonAction, additionalSetup);
+        public static void Alert(string title, string body, string leftButtonText, Action leftButtonAction, string rightButtonText, Action rightButtonAction, Action<VRCUiPopup> additionalSetup = null) =>
+            VRCUiPopupManager?.ShowStandardPopup(title, body, leftButtonText, leftButtonAction, rightButtonText, rightButtonAction, additionalSetup);
+        public static void AlertV2(string title, string body, string leftButtonText, Action leftButtonAction, string rightButtonText, Action rightButtonAction, Action<VRCUiPopup> additionalSetup = null) =>
+            VRCUiPopupManager?.ShowStandardPopupV2(title, body, leftButtonText, leftButtonAction, rightButtonText, rightButtonAction, additionalSetup);
+
+        public static void InputAlert(string title, string text, InputField.InputType type, bool useNumericKeypad, string buttonText, Action<string, List<KeyCode>, Text> submitAction, string placeHolder = "Enter text....", bool hideOnSubmit = true, Action<VRCUiPopup> additionalSetup = null) =>
+            VRCUiPopupManager?.ShowUnityInputPopup(title, text, type, useNumericKeypad, buttonText, submitAction, placeHolder, hideOnSubmit, additionalSetup);
+        public static void InputAlert(string title, string text, InputField.InputType type, bool useNumericKeypad, string buttonText, Action<string, List<KeyCode>, Text> submitAction, Action cancelAction, string placeHolder = "Enter text....", bool hideOnSubmit = true, Action<VRCUiPopup> additionalSetup = null) =>
+            VRCUiPopupManager?.ShowUnityInputPopupWithCancel(title, text, type, useNumericKeypad, buttonText, submitAction, cancelAction, placeHolder, hideOnSubmit, additionalSetup);
 
         internal static void EnableFlowManager()
         {
@@ -189,6 +207,16 @@ namespace VRCMenuUtils
 
             OnUserInfoButtonAdd?.Invoke(button);
         }
+        public static VRCEUiButton AddUserInfoButton(string name, string text, Action clickAction)
+        {
+            if (!_UIInitialized)
+                return null;
+            VRCEUiButton button = new VRCEUiButton(name, new Vector2(0f, 0f), text);
+            button.OnClick += clickAction;
+
+            OnUserInfoButtonAdd?.Invoke(button.Control);
+            return button;
+        }
         #endregion
         #region UserInfo Control Functions
         internal static void SetUserInfoUIState(bool active)
@@ -224,6 +252,17 @@ namespace VRCMenuUtils
 
             OnQuickMenuButtonAdd?.Invoke(button);
         }
+        public static VRCEUiQuickButton AddQuickMenuButton(string name, string text, string tooltip, Action clickAction)
+        {
+            if (!_UIInitialized)
+                return null;
+            VRCEUiQuickButton button = new VRCEUiQuickButton(name, new Vector2(0f, 0f), text, tooltip);
+            button.OnClick += clickAction;
+
+            OnQuickMenuButtonAdd?.Invoke(button);
+            return button;
+        }
+
         public static void ShowQuickMenuPage(string page)
         {
             if (string.IsNullOrEmpty(page))
