@@ -27,6 +27,8 @@ namespace VRCMenuUtils
         private static bool _StartedUp = false;
         private static bool _FlowManagerPaused = false;
         private static bool _FlowManagerFinished = false;
+        private static bool _HookedSceneLoad = false;
+        private static bool _LoadingUI = false;
 
         private static Queue<IEnumerator> _PreFlowExectution = new Queue<IEnumerator>();
         #endregion
@@ -41,25 +43,30 @@ namespace VRCMenuUtils
         #region VRCMenuUtils Coroutine Functions
         public static IEnumerator WaitForInit()
         {
+#if DEBUG
             VRCFlowManager flowManager = Resources.FindObjectsOfTypeAll<VRCFlowManager>().FirstOrDefault();
 
             if (flowManager == null)
             {
-                SceneManager.sceneLoaded += (Scene scene, LoadSceneMode mode) =>
+                if (GameObject.Find("UserInterface") == null && !_HookedSceneLoad)
                 {
-                    if (!_FlowManagerFinished && !_FlowManagerPaused)
+                    _HookedSceneLoad = true;
+                    SceneManager.sceneLoaded += (Scene scene, LoadSceneMode mode) =>
                     {
-                        // Disable FlowManager
-                        DisableFlowManager();
-
-                        if (!_StartedUp)
+                        if (!_FlowManagerFinished && !_FlowManagerPaused && scene.buildIndex == 0)
                         {
-                            _StartedUp = true;
+                            // Disable FlowManager
+                            DisableFlowManager();
 
-                            Resources.FindObjectsOfTypeAll<VRCFlowManager>().First().StartCoroutine(SetupUI());
+                            if (!_StartedUp)
+                            {
+                                _StartedUp = true;
+
+                                Resources.FindObjectsOfTypeAll<VRCFlowManager>().First().StartCoroutine(SetupUI());
+                            }
                         }
-                    }
-                };
+                    };
+                }
             }
             else
             {
@@ -75,6 +82,13 @@ namespace VRCMenuUtils
                     flowManager.StartCoroutine(SetupUI());
                 }
             }
+#else
+            if (!_StartedUp)
+            {
+                _StartedUp = true;
+                yield return SetupUI();
+            }
+#endif
 
             while (!_UIInitialized)
                 yield return null;
@@ -83,6 +97,7 @@ namespace VRCMenuUtils
         #region VRCMenuUtils Functions
         public static void RunBeforeFlowManager(IEnumerator func)
         {
+#if DEBUG
             if (_FlowManagerFinished)
             {
                 MVRCLogger.LogError("Attmpted to run function, after flow manager has been started!");
@@ -92,21 +107,25 @@ namespace VRCMenuUtils
 
             if(flowManager == null)
             {
-                SceneManager.sceneLoaded += (Scene scene, LoadSceneMode mode) =>
+                if (GameObject.Find("UserInterface") == null && !_HookedSceneLoad)
                 {
-                    if (!_FlowManagerFinished && !_FlowManagerPaused)
+                    _HookedSceneLoad = true;
+                    SceneManager.sceneLoaded += (Scene scene, LoadSceneMode mode) =>
                     {
-                        // Disable FlowManager
-                        DisableFlowManager();
-
-                        if(!_StartedUp)
+                        if (!_FlowManagerFinished && !_FlowManagerPaused && scene.buildIndex == 0)
                         {
-                            _StartedUp = true;
+                            // Disable FlowManager
+                            DisableFlowManager();
 
-                            Resources.FindObjectsOfTypeAll<VRCFlowManager>().First().StartCoroutine(SetupUI());
+                            if (!_StartedUp)
+                            {
+                                _StartedUp = true;
+
+                                Resources.FindObjectsOfTypeAll<VRCFlowManager>().First().StartCoroutine(SetupUI());
+                            }
                         }
-                    }
-                };
+                    };
+                }
             }
             else
             {
@@ -124,6 +143,7 @@ namespace VRCMenuUtils
             }
 
             _PreFlowExectution.Enqueue(func);
+#endif
         }
         #endregion
 
@@ -171,6 +191,7 @@ namespace VRCMenuUtils
         public static void InputAlert(string title, string text, InputField.InputType type, bool useNumericKeypad, string buttonText, Action<string, List<KeyCode>, Text> submitAction, Action cancelAction, string placeHolder = "Enter text....", bool hideOnSubmit = true, Action<VRCUiPopup> additionalSetup = null) =>
             VRCUiPopupManager?.ShowUnityInputPopupWithCancel(title, text, type, useNumericKeypad, buttonText, submitAction, cancelAction, placeHolder, hideOnSubmit, additionalSetup);
 
+#if DEBUG
         internal static void EnableFlowManager()
         {
             foreach (VRCFlowManager flowManager in Resources.FindObjectsOfTypeAll<VRCFlowManager>())
@@ -180,13 +201,18 @@ namespace VRCMenuUtils
         }
         internal static void DisableFlowManager()
         {
+            _FlowManagerPaused = true;
             foreach (VRCFlowManager flowManager in Resources.FindObjectsOfTypeAll<VRCFlowManager>())
                 flowManager.enabled = false;
-            if (GameObject.Find("UserInterface") == null)
+            if (GameObject.Find("UserInterface") == null && !_LoadingUI)
+            {
+                _LoadingUI = true;
+                MVRCLogger.Log("Loading UserInterface...");
                 SceneManager.LoadScene("ui", LoadSceneMode.Single);
-            _FlowManagerPaused = true;
+            }
             MVRCLogger.LogWarning("Disabled Flow Manager!");
         }
+#endif
         #endregion
 
         #region UserInfo Variables
@@ -317,7 +343,7 @@ namespace VRCMenuUtils
 
 #if !DEBUG
             // Check for updates
-            RunBeforeFlowManager(CheckForUpdates());
+            //RunBeforeFlowManager(CheckForUpdates());
 #endif
 
             // Setup UserInfo
@@ -326,6 +352,7 @@ namespace VRCMenuUtils
             // Setup Quick Menu
             yield return SetupQuickMenu();
 
+#if DEBUG
             // Run pre-flow manager functions
             while (!_FlowManagerPaused)
                 yield return null;
@@ -335,6 +362,7 @@ namespace VRCMenuUtils
             // Finish
             EnableFlowManager();
             _FlowManagerFinished = true;
+#endif
             OnUserInfoButtonAdd += _UserInfoButtonAdded;
             OnQuickMenuButtonAdd += _QuickMenuButtonAdded;
             _UIInitialized = true;
