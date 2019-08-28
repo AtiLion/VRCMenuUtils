@@ -16,7 +16,6 @@ IEnumerator updateCheck() {
 	// Display some message to user
 }
 ```
-> **Note:** This is currently broken! Please use VRCMenuUtilsAPI.WaitForInit() instead!
 
 after which you can take advantage of its functions.
 To create a new user info button, you need to create a new VRCEUiButton, and assign it your OnClick event. This can be done as follows:
