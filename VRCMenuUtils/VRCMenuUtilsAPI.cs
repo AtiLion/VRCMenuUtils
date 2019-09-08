@@ -108,14 +108,45 @@ namespace VRCMenuUtils
         #region VRChat Reflection
         private static MethodInfo _miVRCUiManagerGetInstace;
         private static MethodInfo _miVRCUiPopupManagerGetInstance;
+
+        private static EventInfo _eiVRCUiManagerOnPageShown;
         #endregion
         #region VRChat Properties
         public static VRCUiManager VRCUiManager => (VRCUiManager)_miVRCUiManagerGetInstace?.Invoke(null, null);
         public static VRCUiPopupManager VRCUiPopupManager => (VRCUiPopupManager)_miVRCUiPopupManagerGetInstance?.Invoke(null, null);
         #endregion
-        #region VRChat Functions
-        public static void ShowUIPage(VRCUiPage page, bool removeHeader = true)
+        #region VRChat Events
+        public static event Action<VRCUiPage> OnPageShown
         {
+            add
+            {
+                if(_eiVRCUiManagerOnPageShown == null)
+                    _eiVRCUiManagerOnPageShown = typeof(VRCUiManager).GetEvents(BindingFlags.Public | BindingFlags.Instance).FirstOrDefault(a => a.EventHandlerType == typeof(Action<VRCUiPage>));
+                if (VRCUiManager == null)
+                    return;
+
+                _eiVRCUiManagerOnPageShown.AddEventHandler(VRCUiManager, value);
+            }
+            remove
+            {
+                if (_eiVRCUiManagerOnPageShown == null)
+                    _eiVRCUiManagerOnPageShown = typeof(VRCUiManager).GetEvents(BindingFlags.Public | BindingFlags.Instance).FirstOrDefault(a => a.EventHandlerType == typeof(Action<VRCUiPage>));
+                if (VRCUiManager == null)
+                    return;
+
+                _eiVRCUiManagerOnPageShown.RemoveEventHandler(VRCUiManager, value);
+            }
+        }
+        #endregion
+        #region VRChat Functions
+        public static void ShowUIPage(VRCUiPage page, bool removeHeader = true, bool setupBody = true)
+        {
+            if(!setupBody)
+            {
+                VRCUiManager.ShowScreen(page);
+                return;
+            }
+
             IEnumerator placeUi()
             {
                 for (int i = 0; i < 4; i++)
@@ -130,6 +161,8 @@ namespace VRCMenuUtils
             VRCUiManager.StartCoroutine(placeUi());
             VRCUiManager.ShowScreen(page);
         }
+        public static VRCUiPage GetPage(string pageId) =>
+            VRCUiManager?.GetPage(pageId);
         public static void HideCurrentPopup() =>
             VRCUiPopupManager?.HideCurrentPopup();
 
