@@ -33,7 +33,7 @@ namespace VRCMenuUtils
         #endregion
         #region VRCMenuUtils Properties
         public static bool IsIntialized => _UIInitialized;
-        public static string Version => "0.3.2";
+        public static string Version => "0.3.3";
         #endregion
         #region VRCMenuUtils Delegates
         public delegate void ElementChangeDelegate(Transform transform);
@@ -408,12 +408,16 @@ namespace VRCMenuUtils
             {
                 // Show update
                 MVRCLogger.Log("New update has been found! Version: " + newVersion);
-                VRCUiPopupManager.ShowStandardPopup(
-                        "VRCMenuUtils Update",
-                        "A new VRCMenuUtils update is now available! Please update as soon as you can.",
-                        "Close", () => { VRCUiPopupManager.HideCurrentPopup(); hasPopup = false; },
-                        "Open", () => System.Diagnostics.Process.Start("https://github.com/AtiLion/VRCMenuUtils/releases")
-                    );
+                Alert(
+                    "VRCMenuUtils Update",
+                    "A new VRCMenuUtils update is now available! Please update as soon as you can.",
+                    "Close", () => { HideCurrentPopup(); hasPopup = false; },
+                    "Open", () => {
+                        HideCurrentPopup();
+                        hasPopup = false;
+                        System.Diagnostics.Process.Start("https://github.com/AtiLion/VRCMenuUtils/releases");
+                    }
+                );
                 while (hasPopup) yield return null;
             }
         }
